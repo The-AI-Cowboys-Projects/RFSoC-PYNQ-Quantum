@@ -39,7 +39,7 @@ class QuantumCollective:
 
     @property
     def size(self) -> int:
-        return self._size
+        return int(self._size)
 
     def init_accl(self, **kwargs: Any) -> None:
         """Initialize ACCL communication layer.
@@ -73,7 +73,8 @@ class QuantumCollective:
         """
         if self._accl is None:
             raise RuntimeError("Call init_accl() first")
-        return self._accl.broadcast(data, root=root)
+        result: np.ndarray = self._accl.broadcast(data, root=root)
+        return result
 
     def allreduce(
         self,
@@ -91,7 +92,8 @@ class QuantumCollective:
         """
         if self._accl is None:
             raise RuntimeError("Call init_accl() first")
-        return self._accl.allreduce(data, op=op)
+        result: np.ndarray = self._accl.allreduce(data, op=op)
+        return result
 
     def gather(self, data: np.ndarray, root: int = 0) -> np.ndarray | None:
         """Gather data from all boards to root.
@@ -105,7 +107,8 @@ class QuantumCollective:
         """
         if self._accl is None:
             raise RuntimeError("Call init_accl() first")
-        return self._accl.gather(data, root=root)
+        result: np.ndarray | None = self._accl.gather(data, root=root)
+        return result
 
     def scatter(self, data: np.ndarray | None, root: int = 0) -> np.ndarray:
         """Scatter chunks of data from root to all boards.
@@ -119,7 +122,8 @@ class QuantumCollective:
         """
         if self._accl is None:
             raise RuntimeError("Call init_accl() first")
-        return self._accl.scatter(data, root=root)
+        result: np.ndarray = self._accl.scatter(data, root=root)
+        return result
 
     def merge_counts(self, local_counts: dict[str, int]) -> dict[str, int]:
         """Merge measurement counts from all boards.
@@ -149,21 +153,21 @@ class _SoftwareACCL:
         pass  # No-op in single-process emulation
 
     def broadcast(self, data: np.ndarray, root: int = 0) -> np.ndarray:
-        return data.copy()
+        return np.array(data, copy=True)
 
     def allreduce(self, data: np.ndarray, op: ReduceOp = ReduceOp.SUM) -> np.ndarray:
         # In emulation, we only have local data
-        return data.copy()
+        return np.array(data, copy=True)
 
     def gather(self, data: np.ndarray, root: int = 0) -> np.ndarray:
-        return data.copy()
+        return np.array(data, copy=True)
 
     def scatter(self, data: np.ndarray | None, root: int = 0) -> np.ndarray:
         if data is None:
             return np.array([])
-        n = self._cluster.num_boards
+        n: int = self._cluster.num_boards
         chunk_size = len(data) // max(n, 1)
-        return data[:chunk_size].copy()
+        return np.array(data[:chunk_size], copy=True)
 
     def allgather_counts(self, local_counts: dict[str, int]) -> list[dict[str, int]]:
         return [local_counts]
