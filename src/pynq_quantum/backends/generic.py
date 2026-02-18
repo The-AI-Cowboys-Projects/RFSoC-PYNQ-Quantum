@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import numpy as np
-
 from .base import (
     AbstractBackend,
     ExecutionResult,
@@ -161,9 +159,7 @@ class GenericBackend(AbstractBackend):
         self._write_reg(Registers.DURATION, int(pulse.duration * 1e9))  # nanoseconds
 
         envelope_map = {"gaussian": 0, "square": 1, "drag": 2, "flat_top": 3}
-        self._write_reg(
-            Registers.ENVELOPE, envelope_map.get(pulse.envelope, 1)
-        )
+        self._write_reg(Registers.ENVELOPE, envelope_map.get(pulse.envelope, 1))
 
     def _program_readout(self, readout: ReadoutInstruction) -> None:
         """Write a readout instruction to the IP registers."""
@@ -185,9 +181,7 @@ class GenericBackend(AbstractBackend):
             time.sleep(0.001)
         raise TimeoutError("Generic backend execution timed out")
 
-    def _read_results(
-        self, readouts: list[ReadoutInstruction], shots: int
-    ) -> dict[str, int]:
+    def _read_results(self, readouts: list[ReadoutInstruction], shots: int) -> dict[str, int]:
         """Read measurement results from the result FIFO."""
         measured_qubits = sorted({q for ro in readouts for q in ro.qubits})
         n = len(measured_qubits) if measured_qubits else 1

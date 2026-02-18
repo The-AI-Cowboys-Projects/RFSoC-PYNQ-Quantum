@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, call
-
-import numpy as np
 import pytest
 
-from pynq_quantum.backends.generic import GenericBackend, Registers
 from pynq_quantum.backends.base import PulseInstruction, ReadoutInstruction
+from pynq_quantum.backends.generic import GenericBackend, Registers
 
 
 class TestGenericBackendInit:
@@ -19,9 +16,7 @@ class TestGenericBackendInit:
         assert not backend._connected
 
     def test_custom_init(self, mock_mmio):
-        backend = GenericBackend(
-            base_addr=0x8000_0000, num_channels=4, mmio=mock_mmio
-        )
+        backend = GenericBackend(base_addr=0x8000_0000, num_channels=4, mmio=mock_mmio)
         assert backend._base_addr == 0x8000_0000
         assert backend.num_channels == 4
 
@@ -79,11 +74,18 @@ class TestGenericBackendOperations:
 
     def test_execute_basic(self, backend, mock_mmio):
         pulse = PulseInstruction(
-            channel=0, frequency=5e9, phase=0.0,
-            amplitude=0.5, duration=40e-9, envelope="gaussian",
+            channel=0,
+            frequency=5e9,
+            phase=0.0,
+            amplitude=0.5,
+            duration=40e-9,
+            envelope="gaussian",
         )
         readout = ReadoutInstruction(
-            channel=0, frequency=7e9, duration=1e-6, qubits=[0],
+            channel=0,
+            frequency=7e9,
+            duration=1e-6,
+            qubits=[0],
         )
         result = backend.execute([pulse], [readout], shots=100)
         assert isinstance(result.counts, dict)
@@ -103,24 +105,24 @@ class TestGenericBackendOperations:
         backend = GenericBackend(mmio=mock_mmio)
         backend.connect()
 
-        pulse = PulseInstruction(
-            channel=0, frequency=5e9, phase=0.0,
-            amplitude=0.5, duration=40e-9,
-        )
-        readout = ReadoutInstruction(
-            channel=0, frequency=7e9, duration=1e-6, qubits=[0],
-        )
         with pytest.raises(TimeoutError):
             backend._wait_done(timeout_ms=10)
 
     def test_envelope_mapping(self, backend, mock_mmio):
         """Different envelopes should map to different register values."""
         for envelope, expected_val in [
-            ("gaussian", 0), ("square", 1), ("drag", 2), ("flat_top", 3),
+            ("gaussian", 0),
+            ("square", 1),
+            ("drag", 2),
+            ("flat_top", 3),
         ]:
             pulse = PulseInstruction(
-                channel=0, frequency=5e9, phase=0.0,
-                amplitude=0.5, duration=40e-9, envelope=envelope,
+                channel=0,
+                frequency=5e9,
+                phase=0.0,
+                amplitude=0.5,
+                duration=40e-9,
+                envelope=envelope,
             )
             backend._program_pulse(pulse)
             mock_mmio.write.assert_any_call(Registers.ENVELOPE, expected_val)

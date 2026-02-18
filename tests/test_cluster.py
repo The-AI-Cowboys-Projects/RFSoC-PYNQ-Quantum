@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
-
 import numpy as np
 import pytest
 
@@ -22,9 +20,7 @@ class TestBoardInfo:
         assert info.metadata == {}
 
     def test_custom_fields(self):
-        info = BoardInfo(
-            host="board-a", num_qubits=4, connected=True, metadata={"role": "main"}
-        )
+        info = BoardInfo(host="board-a", num_qubits=4, connected=True, metadata={"role": "main"})
         assert info.num_qubits == 4
         assert info.connected is True
         assert info.metadata["role"] == "main"
@@ -53,18 +49,14 @@ class TestQuantumClusterInit:
         assert cluster.num_boards == 2  # Original unchanged
 
     def test_backend_and_kwargs_stored(self):
-        cluster = QuantumCluster(
-            ["h1"], backend="simulation", num_qubits=4, seed=99
-        )
+        cluster = QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=99)
         assert cluster._backend_name == "simulation"
         assert cluster._kwargs == {"num_qubits": 4, "seed": 99}
 
 
 class TestQuantumClusterConnect:
     def test_connect_with_simulation(self):
-        cluster = QuantumCluster(
-            ["board1", "board2"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["board1", "board2"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
 
         assert all(b.connected for b in cluster.boards)
@@ -84,9 +76,7 @@ class TestQuantumClusterConnect:
         assert "error" in board.metadata
 
     def test_disconnect(self):
-        cluster = QuantumCluster(
-            ["h1"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
         assert cluster.boards[0].connected is True
 
@@ -108,9 +98,7 @@ class TestQuantumClusterProperties:
 
     def test_total_qubits_only_connected(self):
         """total_qubits should only count connected boards."""
-        cluster = QuantumCluster(
-            ["h1", "h2"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1", "h2"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
         # Manually disconnect one board
         cluster._boards[1].connected = False
@@ -125,9 +113,7 @@ class TestQuantumClusterProperties:
 
 class TestQuantumClusterSyncClocks:
     def test_sync_clocks(self):
-        cluster = QuantumCluster(
-            ["h1", "h2"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1", "h2"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
         assert cluster._synced is False
 
@@ -154,9 +140,7 @@ class TestQuantumClusterSyncClocks:
 class TestQuantumClusterDistributeCircuit:
     def _make_connected_cluster(self, n_boards=2, num_qubits=4):
         hosts = [f"board{i}" for i in range(n_boards)]
-        cluster = QuantumCluster(
-            hosts, backend="simulation", num_qubits=num_qubits, seed=42
-        )
+        cluster = QuantumCluster(hosts, backend="simulation", num_qubits=num_qubits, seed=42)
         cluster.connect()
         return cluster
 
@@ -255,9 +239,7 @@ class TestQuantumClusterDistributeCircuit:
 
 class TestQuantumClusterRun:
     def test_run_basic(self):
-        cluster = QuantumCluster(
-            ["h1", "h2"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1", "h2"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
 
         qc = QuantumCircuit(4)
@@ -274,9 +256,7 @@ class TestQuantumClusterRun:
         cluster.disconnect()
 
     def test_run_with_partition(self):
-        cluster = QuantumCluster(
-            ["h1", "h2"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1", "h2"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
 
         qc = QuantumCircuit(3)
@@ -299,9 +279,7 @@ class TestQuantumClusterRun:
 
 class TestQuantumClusterLocalMeasure:
     def test_local_measure(self):
-        cluster = QuantumCluster(
-            ["h1"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
 
         result = cluster.local_measure(0, [0, 1])
@@ -323,9 +301,7 @@ class TestQuantumClusterLocalMeasure:
 
 class TestQuantumClusterContextManager:
     def test_context_manager_connects_and_disconnects(self):
-        with QuantumCluster(
-            ["h1"], backend="simulation", num_qubits=4, seed=42
-        ) as cluster:
+        with QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=42) as cluster:
             assert cluster.boards[0].connected is True
             assert cluster.boards[0].overlay is not None
 
@@ -335,9 +311,7 @@ class TestQuantumClusterContextManager:
 
     def test_context_manager_disconnects_on_exception(self):
         try:
-            with QuantumCluster(
-                ["h1"], backend="simulation", num_qubits=4, seed=42
-            ) as cluster:
+            with QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=42) as cluster:
                 assert cluster.boards[0].connected is True
                 raise ValueError("test error")
         except ValueError:
@@ -346,31 +320,22 @@ class TestQuantumClusterContextManager:
         assert cluster.boards[0].connected is False
 
     def test_context_manager_returns_cluster(self):
-        with QuantumCluster(
-            ["h1"], backend="simulation", num_qubits=4, seed=42
-        ) as cluster:
+        with QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=42) as cluster:
             assert isinstance(cluster, QuantumCluster)
 
 
 class TestQuantumClusterErrorHandling:
     def test_partial_connect_failure(self):
         """If one board fails to connect, others still connect."""
-        cluster = QuantumCluster(
-            ["h1", "h2"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1", "h2"], backend="simulation", num_qubits=4, seed=42)
 
         # Patch QuantumOverlay to fail on second call
-        call_count = 0
-        original_init = QuantumCluster.connect
-
         def patched_connect(self):
             from pynq_quantum.overlay import QuantumOverlay
 
             for board in self._boards:
                 try:
-                    overlay = QuantumOverlay(
-                        backend=self._backend_name, **self._kwargs
-                    )
+                    overlay = QuantumOverlay(backend=self._backend_name, **self._kwargs)
                     caps = overlay.backend.get_capabilities()
                     board.overlay = overlay
                     board.num_qubits = caps.get("max_qubits", 0)
@@ -396,9 +361,7 @@ class TestQuantumClusterErrorHandling:
 
     def test_run_skips_boards_without_overlay(self):
         """Boards with overlay=None should be silently skipped in run()."""
-        cluster = QuantumCluster(
-            ["h1"], backend="simulation", num_qubits=4, seed=42
-        )
+        cluster = QuantumCluster(["h1"], backend="simulation", num_qubits=4, seed=42)
         cluster.connect()
 
         # Manually remove overlay but keep connected flag

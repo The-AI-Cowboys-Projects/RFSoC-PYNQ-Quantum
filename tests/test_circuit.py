@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from pynq_quantum.circuit import QuantumCircuit
-from pynq_quantum.gates import GateOp, MeasureOp
+from pynq_quantum.gates import MeasureOp
 
 
 class TestQuantumCircuit:

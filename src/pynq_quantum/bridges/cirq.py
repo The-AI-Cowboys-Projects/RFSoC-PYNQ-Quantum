@@ -69,9 +69,7 @@ class RFSoCSampler:
 
         backend = self._overlay.backend
         if isinstance(backend, SimulationBackend):
-            exec_result = backend.execute_circuit(
-                num_qubits, gate_ops, all_measured, repetitions
-            )
+            exec_result = backend.execute_circuit(num_qubits, gate_ops, all_measured, repetitions)
         else:
             compiler = PulseCompiler(num_qubits)
             ops: list[GateOp | MeasureOp] = list(gate_ops)
@@ -128,6 +126,7 @@ class RFSoCTrialResult:
 
 
 # --- Cirq circuit conversion ---
+
 
 def _convert_cirq_circuit(
     circuit: Any,

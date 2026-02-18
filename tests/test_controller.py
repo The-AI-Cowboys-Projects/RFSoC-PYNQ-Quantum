@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from pynq_quantum.controller import QubitController
-from pynq_quantum.gates import GateOp, MeasureOp
+from pynq_quantum.gates import MeasureOp
 
 
 class TestQubitController:

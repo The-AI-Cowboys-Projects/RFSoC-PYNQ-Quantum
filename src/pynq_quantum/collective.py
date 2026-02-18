@@ -61,9 +61,7 @@ class QuantumCollective:
             raise RuntimeError("Call init_accl() first")
         self._accl.barrier()
 
-    def broadcast(
-        self, data: np.ndarray, root: int = 0
-    ) -> np.ndarray:
+    def broadcast(self, data: np.ndarray, root: int = 0) -> np.ndarray:
         """Broadcast data from root board to all boards.
 
         Args:
@@ -95,9 +93,7 @@ class QuantumCollective:
             raise RuntimeError("Call init_accl() first")
         return self._accl.allreduce(data, op=op)
 
-    def gather(
-        self, data: np.ndarray, root: int = 0
-    ) -> np.ndarray | None:
+    def gather(self, data: np.ndarray, root: int = 0) -> np.ndarray | None:
         """Gather data from all boards to root.
 
         Args:
@@ -111,9 +107,7 @@ class QuantumCollective:
             raise RuntimeError("Call init_accl() first")
         return self._accl.gather(data, root=root)
 
-    def scatter(
-        self, data: np.ndarray | None, root: int = 0
-    ) -> np.ndarray:
+    def scatter(self, data: np.ndarray | None, root: int = 0) -> np.ndarray:
         """Scatter chunks of data from root to all boards.
 
         Args:
@@ -127,9 +121,7 @@ class QuantumCollective:
             raise RuntimeError("Call init_accl() first")
         return self._accl.scatter(data, root=root)
 
-    def merge_counts(
-        self, local_counts: dict[str, int]
-    ) -> dict[str, int]:
+    def merge_counts(self, local_counts: dict[str, int]) -> dict[str, int]:
         """Merge measurement counts from all boards.
 
         Sums counts with matching bitstrings across all boards.
@@ -173,7 +165,5 @@ class _SoftwareACCL:
         chunk_size = len(data) // max(n, 1)
         return data[:chunk_size].copy()
 
-    def allgather_counts(
-        self, local_counts: dict[str, int]
-    ) -> list[dict[str, int]]:
+    def allgather_counts(self, local_counts: dict[str, int]) -> list[dict[str, int]]:
         return [local_counts]

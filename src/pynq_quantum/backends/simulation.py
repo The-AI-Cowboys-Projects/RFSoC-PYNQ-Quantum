@@ -69,9 +69,21 @@ class SimulationBackend(AbstractBackend):
         return {
             "max_qubits": self._num_qubits,
             "supported_gates": [
-                "I", "X", "Y", "Z", "H", "S", "T",
-                "RX", "RY", "RZ", "P",
-                "CNOT", "CZ", "SWAP", "Toffoli",
+                "I",
+                "X",
+                "Y",
+                "Z",
+                "H",
+                "S",
+                "T",
+                "RX",
+                "RY",
+                "RZ",
+                "P",
+                "CNOT",
+                "CZ",
+                "SWAP",
+                "Toffoli",
             ],
             "simulation": True,
             "max_shots": 1_000_000,
@@ -144,7 +156,6 @@ def _apply_gate(
 ) -> np.ndarray:
     """Apply a gate matrix to specified qubits in the statevector."""
     n = num_qubits
-    dim = 2**n
     gate_n = len(qubits)
 
     if gate_n == 1:
@@ -269,7 +280,7 @@ def _sample_counts(
         return {"0" * n: shots}
 
     labels = list(probs.keys())
-    weights = np.array([probs[l] for l in labels])
+    weights = np.array([probs[label] for label in labels])
     # Normalize
     weights = weights / weights.sum()
 

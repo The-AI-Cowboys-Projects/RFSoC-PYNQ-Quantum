@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from .backends.base import ExecutionResult
 from .backends.simulation import SimulationBackend
 from .compiler import PulseCompiler
@@ -137,9 +135,7 @@ class QubitController:
             self._validate_qubit(q)
         if len({control1, control2, target}) != 3:
             raise ValueError("Toffoli requires three distinct qubits")
-        self._program.append(
-            GateOp(gate=TOFFOLI_GATE, qubits=(control1, control2, target))
-        )
+        self._program.append(GateOp(gate=TOFFOLI_GATE, qubits=(control1, control2, target)))
 
     # --- Measurement + execution ---
 
@@ -174,9 +170,7 @@ class QubitController:
 
         # Fast path for simulation
         if isinstance(backend, SimulationBackend):
-            return backend.execute_circuit(
-                self._num_qubits, gate_ops, measure_qubits, shots
-            )
+            return backend.execute_circuit(self._num_qubits, gate_ops, measure_qubits, shots)
 
         # Hardware path: compile to pulses
         pulses, readouts = self._compiler.compile(self._program)
@@ -189,6 +183,4 @@ class QubitController:
 
     def _validate_qubit(self, qubit: int) -> None:
         if qubit < 0 or qubit >= self._num_qubits:
-            raise ValueError(
-                f"Qubit {qubit} out of range [0, {self._num_qubits})"
-            )
+            raise ValueError(f"Qubit {qubit} out of range [0, {self._num_qubits})")

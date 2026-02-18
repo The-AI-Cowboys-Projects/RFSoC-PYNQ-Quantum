@@ -9,7 +9,6 @@ import pytest
 
 from pynq_quantum.collective import QuantumCollective, ReduceOp, _SoftwareACCL
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

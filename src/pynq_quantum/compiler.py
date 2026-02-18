@@ -197,19 +197,19 @@ class PulseCompiler:
     def _compile_swap(self, op: GateOp) -> list[PulseInstruction]:
         """Compile SWAP as three CNOTs."""
         q0, q1 = op.qubits
-        from .gates import CNOT_GATE, GateOp as GO
+        from .gates import CNOT_GATE
+        from .gates import GateOp as GO
 
         pulses: list[PulseInstruction] = []
         for ctrl, tgt in [(q0, q1), (q1, q0), (q0, q1)]:
-            pulses.extend(
-                self._compile_two_qubit(GO(gate=CNOT_GATE, qubits=(ctrl, tgt)))
-            )
+            pulses.extend(self._compile_two_qubit(GO(gate=CNOT_GATE, qubits=(ctrl, tgt))))
         return pulses
 
     def _compile_toffoli(self, op: GateOp) -> list[PulseInstruction]:
         """Compile Toffoli as a sequence of single- and two-qubit gates."""
         q0, q1, q2 = op.qubits
-        from .gates import CNOT_GATE, GateOp as GO, H_GATE, T_GATE
+        from .gates import CNOT_GATE, H_GATE, T_GATE
+        from .gates import GateOp as GO
 
         pulses: list[PulseInstruction] = []
         # Simplified Toffoli decomposition

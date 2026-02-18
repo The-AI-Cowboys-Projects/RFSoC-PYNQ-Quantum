@@ -21,8 +21,7 @@ class GateDefinition:
         expected = 2**self.num_qubits
         if self.matrix.shape != (expected, expected):
             raise ValueError(
-                f"Gate '{self.name}' needs {expected}x{expected} matrix, "
-                f"got {self.matrix.shape}"
+                f"Gate '{self.name}' needs {expected}x{expected} matrix, got {self.matrix.shape}"
             )
 
 
@@ -51,9 +50,7 @@ class MeasureOp:
 
 # --- Single-qubit gates ---
 
-I_GATE = GateDefinition(
-    name="I", num_qubits=1, matrix=np.eye(2, dtype=complex)
-)
+I_GATE = GateDefinition(name="I", num_qubits=1, matrix=np.eye(2, dtype=complex))
 
 X_GATE = GateDefinition(
     name="X",

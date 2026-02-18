@@ -3,39 +3,32 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
 
 from pynq_quantum.bridges.qiskit import (
+    _QISKIT_GATE_MAP,
     RFSoCBackend,
     RFSoCJob,
+    _convert_qiskit_circuit,
     _RFSoCResult,
     _RFSoCTarget,
-    _convert_qiskit_circuit,
-    _QISKIT_GATE_MAP,
 )
 from pynq_quantum.gates import (
     CNOT_GATE,
-    CZ_GATE,
     H_GATE,
     S_GATE,
     SWAP_GATE,
     T_GATE,
     X_GATE,
-    Y_GATE,
-    Z_GATE,
-    GateOp,
-    rx_gate,
-    ry_gate,
-    rz_gate,
 )
-
 
 # ---------------------------------------------------------------------------
 # Mock helpers — simulate Qiskit objects without importing qiskit
 # ---------------------------------------------------------------------------
+
 
 class _MockBitRef:
     """Stands in for qiskit Qubit; identity is by object id."""
@@ -85,6 +78,7 @@ def _make_circuit(instructions, num_qubits: int = 2):
 # _RFSoCResult
 # ---------------------------------------------------------------------------
 
+
 class TestRFSoCResult:
     """Tests for the Qiskit-compatible result wrapper."""
 
@@ -121,6 +115,7 @@ class TestRFSoCResult:
 # RFSoCJob
 # ---------------------------------------------------------------------------
 
+
 class TestRFSoCJob:
     """Tests for the minimal job wrapper."""
 
@@ -148,6 +143,7 @@ class TestRFSoCJob:
 # _RFSoCTarget
 # ---------------------------------------------------------------------------
 
+
 class TestRFSoCTarget:
     """Tests for the minimal transpiler target."""
 
@@ -168,6 +164,7 @@ class TestRFSoCTarget:
 # ---------------------------------------------------------------------------
 # RFSoCBackend init and properties
 # ---------------------------------------------------------------------------
+
 
 class TestRFSoCBackendInit:
     """Tests for backend construction and properties."""
@@ -207,6 +204,7 @@ class TestRFSoCBackendInit:
 # ---------------------------------------------------------------------------
 # _convert_qiskit_circuit
 # ---------------------------------------------------------------------------
+
 
 class TestConvertQiskitCircuit:
     """Tests for Qiskit circuit to pynq-quantum conversion."""
@@ -349,6 +347,7 @@ class TestConvertQiskitCircuit:
 # ---------------------------------------------------------------------------
 # RFSoCBackend.run() integration with simulation backend
 # ---------------------------------------------------------------------------
+
 
 class TestRFSoCBackendRun:
     """Integration tests using the simulation backend (no real qiskit)."""

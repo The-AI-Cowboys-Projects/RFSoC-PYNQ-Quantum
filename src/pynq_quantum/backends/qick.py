@@ -173,9 +173,7 @@ class QICKBackend(AbstractBackend):
         try:
             soc = qick_mod.QickSoc(**kwargs)  # type: ignore[attr-defined]
         except Exception as exc:
-            raise RuntimeError(
-                f"Failed to initialise QickSoc: {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to initialise QickSoc: {exc}") from exc
 
         self._soc = soc
         self._soccfg = soc
