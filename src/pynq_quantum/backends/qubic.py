@@ -246,6 +246,7 @@ class QubiCBackend(AbstractBackend):
         sequence = self._build_sequence(pulses, readouts)
 
         # 2. Compile -------------------------------------------------------
+        assert self._compiler is not None, "Compiler not initialized"
         compiled = self._compiler.compile(sequence)
         logger.debug("QubiC compilation produced %d instructions", len(compiled))
 
@@ -420,7 +421,7 @@ def _threshold_channel_dict(
 ) -> dict[str, int]:
     """Threshold per-channel arrays into bitstring counts."""
     # Determine which channels carry readout data.
-    ro_channels = sorted({ro.channel for ro in readouts}) if readouts else []
+    ro_channels: list[Any] = sorted({ro.channel for ro in readouts}) if readouts else []
     if not ro_channels:
         ro_channels = sorted(
             k
@@ -434,7 +435,7 @@ def _threshold_channel_dict(
     # Stack arrays column-wise: (shots, n_readouts)
     arrays = []
     for ch in ro_channels:
-        arr = data.get(ch) if not isinstance(ch, int) else data.get(str(ch), data.get(ch))
+        arr = data.get(ch) if not isinstance(ch, int) else data.get(str(ch), data.get(ch))  # type: ignore[call-overload]
         if arr is None:
             continue
         arrays.append(np.asarray(arr).ravel())

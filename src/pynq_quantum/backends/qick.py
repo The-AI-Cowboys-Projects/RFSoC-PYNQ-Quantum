@@ -637,4 +637,5 @@ def _build_envelope(
     peak = np.max(np.abs(waveform))
     if peak > 0:
         waveform = waveform / peak
-    return np.round(waveform * 32767).astype(np.int16)
+    result: np.ndarray = np.round(waveform * 32767).astype(np.int16)
+    return result

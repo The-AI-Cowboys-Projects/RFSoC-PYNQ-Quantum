@@ -145,7 +145,8 @@ class GenericBackend(AbstractBackend):
     def _read_reg(self, offset: int) -> int:
         """Read a 32-bit value from an AXI-Lite register."""
         if self._mmio is not None:
-            return self._mmio.read(offset)
+            val: int = self._mmio.read(offset)
+            return val
         return 0
 
     def _program_pulse(self, pulse: PulseInstruction) -> None:

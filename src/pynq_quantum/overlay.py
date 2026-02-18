@@ -97,7 +97,8 @@ class QuantumOverlay:
 
             devices = Device.devices
             if devices:
-                return devices[0].name
+                name: str = devices[0].name
+                return name
         except (ImportError, Exception):
             pass
 
