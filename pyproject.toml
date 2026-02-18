@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynq-quantum"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unified Python API for multi-backend quantum control on Xilinx RFSoC"
 readme = "README.md"
 license = {text = "BSD-3-Clause"}
