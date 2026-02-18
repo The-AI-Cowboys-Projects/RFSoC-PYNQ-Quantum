@@ -8,7 +8,6 @@ from typing import Any
 from .backends import get_backend
 from .backends.base import AbstractBackend
 
-
 # Known RFSoC board identifiers (from /proc/device-tree or PYNQ)
 BOARD_MAP = {
     "ZCU111": "qick",

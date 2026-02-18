@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import json
-import tempfile
-from pathlib import Path
 from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
 
-from pynq_quantum.backends.qubic import QubiCBackend
 from pynq_quantum.backends.base import PulseInstruction, ReadoutInstruction
+from pynq_quantum.backends.qubic import QubiCBackend
 
 
 @pytest.fixture
@@ -108,8 +106,12 @@ class TestQubiCSequenceBuilding:
     def test_build_sequence(self):
         pulses = [
             PulseInstruction(
-                channel=0, frequency=5e9, phase=0.0,
-                amplitude=0.5, duration=40e-9, envelope="gaussian",
+                channel=0,
+                frequency=5e9,
+                phase=0.0,
+                amplitude=0.5,
+                duration=40e-9,
+                envelope="gaussian",
                 envelope_params={"sigma": 10e-9},
             ),
         ]

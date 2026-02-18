@@ -62,9 +62,7 @@ class QuantumCluster:
         """Connect to all boards in the cluster."""
         for board in self._boards:
             try:
-                overlay = QuantumOverlay(
-                    backend=self._backend_name, **self._kwargs
-                )
+                overlay = QuantumOverlay(backend=self._backend_name, **self._kwargs)
                 caps = overlay.backend.get_capabilities()
                 board.overlay = overlay
                 board.num_qubits = caps.get("max_qubits", 0)
@@ -144,9 +142,7 @@ class QuantumCluster:
                         mapped = tuple(qubit_map[q] for q in op.qubits)
                         sub._ops.append(GateOp(gate=op.gate, qubits=mapped))
                 elif isinstance(op, MeasureOp):
-                    mapped_qubits = tuple(
-                        qubit_map[q] for q in op.qubits if q in qubit_map
-                    )
+                    mapped_qubits = tuple(qubit_map[q] for q in op.qubits if q in qubit_map)
                     if mapped_qubits:
                         sub._ops.append(MeasureOp(qubits=mapped_qubits))
 

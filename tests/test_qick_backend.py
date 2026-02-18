@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
-
 import numpy as np
 import pytest
 
 from pynq_quantum.backends.qick import QICKBackend
-from pynq_quantum.backends.base import PulseInstruction, ReadoutInstruction
 
 
 class TestQICKBackendInit:
@@ -64,10 +61,12 @@ class TestQICKBackendOperations:
 
     def test_iq_to_counts_3d(self):
         """Test IQ data thresholding with 3D array (readouts, quadratures, shots)."""
-        iq = np.array([
-            [[0.5, -0.3, 0.1, -0.8], [0.1, 0.2, 0.3, 0.4]],
-            [[-0.1, 0.2, 0.3, -0.4], [0.5, 0.6, 0.7, 0.8]],
-        ])
+        iq = np.array(
+            [
+                [[0.5, -0.3, 0.1, -0.8], [0.1, 0.2, 0.3, 0.4]],
+                [[-0.1, 0.2, 0.3, -0.4], [0.5, 0.6, 0.7, 0.8]],
+            ]
+        )
         counts, raw = QICKBackend._iq_to_counts(iq, [], 4)
         assert isinstance(counts, dict)
         assert sum(counts.values()) == 4

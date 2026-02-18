@@ -3,12 +3,8 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
 from typing import Any
 
-import numpy as np
-
-from ..backends.base import ExecutionResult
 from ..backends.simulation import SimulationBackend
 from ..compiler import PulseCompiler
 from ..gates import (
@@ -129,9 +125,7 @@ class RFSoCBackend:
 
         backend = self._overlay.backend
         if isinstance(backend, SimulationBackend):
-            exec_result = backend.execute_circuit(
-                qc.num_qubits, gate_ops, measure_qubits, shots
-            )
+            exec_result = backend.execute_circuit(qc.num_qubits, gate_ops, measure_qubits, shots)
         else:
             compiler = PulseCompiler(qc.num_qubits)
             ops: list[GateOp | MeasureOp] = list(gate_ops)

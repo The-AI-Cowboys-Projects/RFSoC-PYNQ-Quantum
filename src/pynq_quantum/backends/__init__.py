@@ -20,9 +20,7 @@ def get_backend(name: str) -> type[AbstractBackend]:
     if name not in _REGISTRY:
         _load_builtin(name)
     if name not in _REGISTRY:
-        raise KeyError(
-            f"Unknown backend '{name}'. Available: {list(_REGISTRY.keys())}"
-        )
+        raise KeyError(f"Unknown backend '{name}'. Available: {list(_REGISTRY.keys())}")
     return _REGISTRY[name]
 
 
@@ -54,19 +52,23 @@ def _load_all_builtins() -> None:
 
 def _load_simulation() -> None:
     from .simulation import SimulationBackend
+
     register_backend("simulation", SimulationBackend)
 
 
 def _load_qick() -> None:
     from .qick import QICKBackend
+
     register_backend("qick", QICKBackend)
 
 
 def _load_qubic() -> None:
     from .qubic import QubiCBackend
+
     register_backend("qubic", QubiCBackend)
 
 
 def _load_generic() -> None:
     from .generic import GenericBackend
+
     register_backend("generic", GenericBackend)

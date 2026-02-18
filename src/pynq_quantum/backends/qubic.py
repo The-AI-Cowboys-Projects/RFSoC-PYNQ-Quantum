@@ -73,6 +73,7 @@ def _is_qubic_available() -> bool:
 # QubiC backend
 # ---------------------------------------------------------------------------
 
+
 class QubiCBackend(AbstractBackend):
     """Quantum control backend using the QubiC compiler and JSON config.
 
@@ -143,9 +144,7 @@ class QubiCBackend(AbstractBackend):
         """
         config_file = Path(self._config_path)
         if not config_file.exists():
-            raise FileNotFoundError(
-                f"QubiC configuration file not found: {config_file.resolve()}"
-            )
+            raise FileNotFoundError(f"QubiC configuration file not found: {config_file.resolve()}")
 
         with open(config_file, "r", encoding="utf-8") as fh:
             self._config = json.load(fh)
@@ -181,9 +180,7 @@ class QubiCBackend(AbstractBackend):
         self._connected = False
         logger.info("QubiC backend disconnected")
 
-    def configure_qubit(
-        self, qubit_id: int, frequency: float, **params: Any
-    ) -> None:
+    def configure_qubit(self, qubit_id: int, frequency: float, **params: Any) -> None:
         """Store qubit parameters and update the QubiC channel map.
 
         Parameters
@@ -241,9 +238,7 @@ class QubiCBackend(AbstractBackend):
             If the backend is not connected.
         """
         if not self._connected:
-            raise RuntimeError(
-                "QubiC backend is not connected. Call connect() first."
-            )
+            raise RuntimeError("QubiC backend is not connected. Call connect() first.")
 
         qubic = _ensure_qubic()
 
@@ -418,6 +413,7 @@ class QubiCBackend(AbstractBackend):
 # Module-level result parsing helpers
 # ---------------------------------------------------------------------------
 
+
 def _threshold_channel_dict(
     data: dict[str, Any],
     readouts: list[ReadoutInstruction],
@@ -427,7 +423,8 @@ def _threshold_channel_dict(
     ro_channels = sorted({ro.channel for ro in readouts}) if readouts else []
     if not ro_channels:
         ro_channels = sorted(
-            k for k, v in data.items()
+            k
+            for k, v in data.items()
             if isinstance(v, (list, np.ndarray)) and k != "raw" and k != "iq_data"
         )
 

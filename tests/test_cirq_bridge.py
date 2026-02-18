@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
@@ -26,16 +25,12 @@ from pynq_quantum.gates import (
     X_GATE,
     Y_GATE,
     Z_GATE,
-    GateOp,
-    rx_gate,
-    ry_gate,
-    rz_gate,
 )
-
 
 # ---------------------------------------------------------------------------
 # Mock helpers — simulate Cirq objects without importing cirq
 # ---------------------------------------------------------------------------
+
 
 class _MockQubit:
     """Sortable stand-in for cirq.LineQubit."""
@@ -120,6 +115,7 @@ def _make_circuit(moments: list, all_qubits: list[int] | None = None):
 # RFSoCTrialResult
 # ---------------------------------------------------------------------------
 
+
 class TestRFSoCTrialResult:
     """Tests for the Cirq-compatible trial result."""
 
@@ -172,6 +168,7 @@ class TestRFSoCTrialResult:
 # _count_qubits
 # ---------------------------------------------------------------------------
 
+
 class TestCountQubits:
     """Tests for the qubit counting helper."""
 
@@ -191,6 +188,7 @@ class TestCountQubits:
 # ---------------------------------------------------------------------------
 # _counts_to_measurements
 # ---------------------------------------------------------------------------
+
 
 class TestCountsToMeasurements:
     """Tests for expanding count dicts to Cirq-style measurement arrays."""
@@ -261,6 +259,7 @@ class TestCountsToMeasurements:
 # ---------------------------------------------------------------------------
 # _map_cirq_gate
 # ---------------------------------------------------------------------------
+
 
 class TestMapCirqGate:
     """Tests for mapping individual Cirq gates to GateOps."""
@@ -377,6 +376,7 @@ class TestMapCirqGate:
 # _convert_cirq_circuit
 # ---------------------------------------------------------------------------
 
+
 class TestConvertCirqCircuit:
     """Tests for full Cirq circuit conversion."""
 
@@ -437,11 +437,13 @@ class TestConvertCirqCircuit:
         cx_op = _make_operation(cx_gate, [0, 1])
         m_op = _make_operation(m_gate, [0, 1])
 
-        circuit = _make_circuit([
-            _make_moment([h_op]),
-            _make_moment([cx_op]),
-            _make_moment([m_op]),
-        ])
+        circuit = _make_circuit(
+            [
+                _make_moment([h_op]),
+                _make_moment([cx_op]),
+                _make_moment([m_op]),
+            ]
+        )
 
         gate_ops, measure_keys = _convert_cirq_circuit(circuit)
         assert len(gate_ops) == 2
@@ -478,10 +480,14 @@ class TestConvertCirqCircuit:
         def all_qubits():
             return {q2, q5}
 
-        circuit_cls = type("MockCircuit", (), {
-            "all_qubits": all_qubits,
-            "__iter__": lambda self: iter([moment]),
-        })
+        circuit_cls = type(
+            "MockCircuit",
+            (),
+            {
+                "all_qubits": all_qubits,
+                "__iter__": lambda self: iter([moment]),
+            },
+        )
         circuit = circuit_cls()
         circuit.all_qubits = all_qubits
 
@@ -520,6 +526,7 @@ class TestConvertCirqCircuit:
 # RFSoCSampler
 # ---------------------------------------------------------------------------
 
+
 class TestRFSoCSampler:
     """Tests for the Cirq-compatible sampler."""
 
@@ -549,10 +556,12 @@ class TestRFSoCSampler:
         x_op = _make_operation(x_gate, [0])
         m_op = _make_operation(m_gate, [0])
 
-        circuit = _make_circuit([
-            _make_moment([x_op]),
-            _make_moment([m_op]),
-        ])
+        circuit = _make_circuit(
+            [
+                _make_moment([x_op]),
+                _make_moment([m_op]),
+            ]
+        )
 
         result = sampler.run(circuit, repetitions=50)
         assert isinstance(result, RFSoCTrialResult)
@@ -568,10 +577,12 @@ class TestRFSoCSampler:
         h_op = _make_operation(h_gate, [0])
         m_op = _make_operation(m_gate, [0])
 
-        circuit = _make_circuit([
-            _make_moment([h_op]),
-            _make_moment([m_op]),
-        ])
+        circuit = _make_circuit(
+            [
+                _make_moment([h_op]),
+                _make_moment([m_op]),
+            ]
+        )
 
         result = sampler.run(circuit, repetitions=200)
         h = result.histogram("q0")
@@ -592,11 +603,13 @@ class TestRFSoCSampler:
         cx_op = _make_operation(cx_gate, [0, 1])
         m_op = _make_operation(m_gate, [0, 1])
 
-        circuit = _make_circuit([
-            _make_moment([h_op]),
-            _make_moment([cx_op]),
-            _make_moment([m_op]),
-        ])
+        circuit = _make_circuit(
+            [
+                _make_moment([h_op]),
+                _make_moment([cx_op]),
+                _make_moment([m_op]),
+            ]
+        )
 
         result = sampler.run(circuit, repetitions=100)
         assert "bell" in result.measurements

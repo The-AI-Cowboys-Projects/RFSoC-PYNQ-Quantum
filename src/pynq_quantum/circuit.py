@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
-import numpy as np
-
 from .backends.base import ExecutionResult
 from .backends.simulation import SimulationBackend
 from .compiler import PulseCompiler
@@ -222,9 +218,7 @@ class QuantumCircuit:
         backend = overlay.backend
 
         if isinstance(backend, SimulationBackend):
-            return backend.execute_circuit(
-                self._num_qubits, gate_ops, measure_qubits, shots
-            )
+            return backend.execute_circuit(self._num_qubits, gate_ops, measure_qubits, shots)
 
         compiler = PulseCompiler(self._num_qubits)
         pulses, readouts = compiler.compile(self._ops)
@@ -234,9 +228,7 @@ class QuantumCircuit:
 
     def _validate_qubit(self, qubit: int) -> None:
         if qubit < 0 or qubit >= self._num_qubits:
-            raise ValueError(
-                f"Qubit {qubit} out of range [0, {self._num_qubits})"
-            )
+            raise ValueError(f"Qubit {qubit} out of range [0, {self._num_qubits})")
 
     def __repr__(self) -> str:
         return (

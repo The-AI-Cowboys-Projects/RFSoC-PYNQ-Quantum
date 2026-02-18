@@ -6,6 +6,7 @@ import pytest
 from pynq_quantum.gates import (
     CNOT_GATE,
     CZ_GATE,
+    GATE_TABLE,
     H_GATE,
     I_GATE,
     S_GATE,
@@ -15,23 +16,31 @@ from pynq_quantum.gates import (
     X_GATE,
     Y_GATE,
     Z_GATE,
-    GATE_TABLE,
     GateDefinition,
     GateOp,
     MeasureOp,
+    phase_gate,
     rx_gate,
     ry_gate,
     rz_gate,
-    phase_gate,
 )
 
 
 class TestGateMatrices:
     """Verify gate matrices are unitary and correct."""
 
-    @pytest.mark.parametrize("gate", [
-        I_GATE, X_GATE, Y_GATE, Z_GATE, H_GATE, S_GATE, T_GATE,
-    ])
+    @pytest.mark.parametrize(
+        "gate",
+        [
+            I_GATE,
+            X_GATE,
+            Y_GATE,
+            Z_GATE,
+            H_GATE,
+            S_GATE,
+            T_GATE,
+        ],
+    )
     def test_single_qubit_unitary(self, gate):
         """Single-qubit gates should be unitary: U†U = I."""
         product = gate.matrix.conj().T @ gate.matrix
@@ -79,21 +88,15 @@ class TestParameterizedGates:
     def test_rx_pi_equals_x(self):
         rx_pi = rx_gate(np.pi)
         # RX(π) = -iX, so up to global phase
-        np.testing.assert_allclose(
-            np.abs(rx_pi.matrix), np.abs(X_GATE.matrix), atol=1e-12
-        )
+        np.testing.assert_allclose(np.abs(rx_pi.matrix), np.abs(X_GATE.matrix), atol=1e-12)
 
     def test_ry_pi_equals_y(self):
         ry_pi = ry_gate(np.pi)
-        np.testing.assert_allclose(
-            np.abs(ry_pi.matrix), np.abs(Y_GATE.matrix), atol=1e-12
-        )
+        np.testing.assert_allclose(np.abs(ry_pi.matrix), np.abs(Y_GATE.matrix), atol=1e-12)
 
     def test_rz_pi_equals_z(self):
         rz_pi = rz_gate(np.pi)
-        np.testing.assert_allclose(
-            np.abs(rz_pi.matrix), np.abs(Z_GATE.matrix), atol=1e-12
-        )
+        np.testing.assert_allclose(np.abs(rz_pi.matrix), np.abs(Z_GATE.matrix), atol=1e-12)
 
     def test_rx_zero_is_identity(self):
         rx_0 = rx_gate(0)
